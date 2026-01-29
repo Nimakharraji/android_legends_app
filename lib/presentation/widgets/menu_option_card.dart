@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/responsive.dart'; // ایمپورت فایل جدید
@@ -86,11 +88,11 @@ class MenuOptionCard extends StatelessWidget {
                       Text(
                         title,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontSize: AppResponsive.fontSize(
-                            context,
-                            20,
-                          ), // کمی کوچکتر از تم اصلی
-                        ),
+                              fontSize: AppResponsive.fontSize(
+                                context,
+                                20,
+                              ), // کمی کوچکتر از تم اصلی
+                            ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -99,7 +101,9 @@ class MenuOptionCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           subtitle,
-                          style: Theme.of(context).textTheme.bodyMedium
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
                               ?.copyWith(
                                 fontSize: AppResponsive.fontSize(context, 14),
                               ),

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../core/theme/app_theme.dart';
 import '../../core/constants/enums.dart';
 import '../../data/repositories/hero_repository.dart';
-import '../../data/models/hero_model.dart';
 import '../../logic/cubits/main_hero_pool_cubit.dart';
 import '../../logic/cubits/pinned_hero_cubit.dart';
 import '../widgets/hero_avatar_item.dart';
@@ -148,6 +146,7 @@ class MainHeroPoolScreen extends StatelessWidget {
                               .read<MainHeroPoolCubit>()
                               .setLaneFilter(val ? lane : null),
                           selectedColor:
+                              // ignore: deprecated_member_use
                               const Color(0xFF00D2FF).withOpacity(0.3),
                         ),
                       ))

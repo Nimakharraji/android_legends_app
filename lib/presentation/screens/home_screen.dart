@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/theme/app_theme.dart';
@@ -35,94 +37,97 @@ class HomeScreen extends StatelessWidget {
               children: [
                 SizedBox(height: isBubble ? 10 : 20),
 
-                // --- HEADER SECTION ---
+                // --- HEADER SECTION (آیکون ستینگ حذف شد) ---
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment:
+                      MainAxisAlignment.center, // وسط‌چین کردن عنوان
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                    Column(
+                      children: [
+                        Text(
+                          isBubble ? 'ML Drafter' : 'MLBB DRAFTER',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayLarge
+                              ?.copyWith(
+                            color: AppTheme.accent,
+                            fontSize: AppResponsive.fontSize(context, 28),
+                            letterSpacing: 4,
+                            shadows: [
+                              Shadow(
+                                color: AppTheme.accent.withOpacity(0.5),
+                                blurRadius: 15,
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (!isBubble)
                           Text(
-                            isBubble ? 'ML Drafter' : 'MLBB Drafter',
-                            style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                              color: AppTheme.accent,
-                              fontSize: AppResponsive.fontSize(context, 32),
-                              shadows: [
-                                Shadow(
-                                  color: AppTheme.accent.withOpacity(0.5),
-                                  blurRadius: 10,
-                                ),
-                              ],
+                            'STRATEGIC ANALYSIS ENGINE',
+                            style: GoogleFonts.rajdhani(
+                              color: Colors.white24,
+                              fontSize: 10,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          if (!isBubble)
-                            Text(
-                              'Win the draft, Win the game',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        // تنظیمات اپلیکیشن در آینده
-                      },
-                      icon: Icon(
-                        Icons.settings_outlined,
-                        color: Colors.white54,
-                        size: AppResponsive.iconSize(context, 24),
-                      ),
+                      ],
                     ),
                   ],
                 ),
 
-                SizedBox(height: isBubble ? 15 : 40),
+                SizedBox(height: isBubble ? 15 : 30),
 
-                // --- NAVIGATION MENU ---
+                // --- NAVIGATION MENU (تمام صفحه شده) ---
                 Expanded(
-                  child: ListView(
-                    physics: const BouncingScrollPhysics(),
+                  child: Column(
                     children: [
-                      MenuOptionCard(
-                        title: 'My Hero Pool',
-                        subtitle: 'Heroes you master',
-                        icon: Icons.person_search_rounded,
-                        iconColor: Colors.blueAccent,
-                        onTap: () {
-                          Navigator.push(
+                      Expanded(
+                        child: MenuOptionCard(
+                          title: 'MY HERO POOL',
+                          subtitle: 'Heroes you master',
+                          icon: Icons.person_search_rounded,
+                          iconColor: Colors.blueAccent,
+                          onTap: () => Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const MainHeroPoolScreen()),
-                          );
-                        },
+                            MaterialPageRoute(
+                                builder: (_) => const MainHeroPoolScreen()),
+                          ),
+                        ),
                       ),
-                      MenuOptionCard(
-                        title: 'Counter Pick',
-                        subtitle: 'Smart draft analysis',
-                        icon: Icons.radar_rounded,
-                        iconColor: Colors.redAccent,
-                        onTap: () {
-                          Navigator.push(
+                      const SizedBox(height: 12),
+                      Expanded(
+                        child: MenuOptionCard(
+                          title: 'COUNTER PICK',
+                          subtitle: 'Smart draft analysis',
+                          icon: Icons.radar_rounded,
+                          iconColor: Colors.redAccent,
+                          onTap: () => Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const CounterPickerScreen()),
-                          );
-                        },
+                            MaterialPageRoute(
+                                builder: (_) => const CounterPickerScreen()),
+                          ),
+                        ),
                       ),
-                      MenuOptionCard(
-                        title: 'Hero Library',
-                        subtitle: 'Stats & Strategies',
-                        icon: Icons.auto_stories_rounded,
-                        iconColor: AppTheme.accent,
-                        onTap: () {
-                          Navigator.push(
+                      const SizedBox(height: 12),
+                      Expanded(
+                        child: MenuOptionCard(
+                          title: 'HERO LIBRARY',
+                          subtitle: 'Stats & Strategies',
+                          icon: Icons.auto_stories_rounded,
+                          iconColor: AppTheme.accent,
+                          onTap: () => Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const HeroLibraryScreen()),
-                          );
-                        },
+                            MaterialPageRoute(
+                                builder: (_) => const HeroLibraryScreen()),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
+
+                const SizedBox(height: 10),
 
                 // --- MODERN DEVELOPER FOOTER ---
                 _buildDeveloperFooter(context, isBubble),
@@ -137,27 +142,21 @@ class HomeScreen extends StatelessWidget {
   Widget _buildDeveloperFooter(BuildContext context, bool isBubble) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: isBubble ? 10 : 20),
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: Colors.white.withOpacity(0.05), width: 1),
-        ),
-      ),
+      padding: EdgeInsets.symmetric(vertical: isBubble ? 10 : 15),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.terminal_rounded, 
-                size: isBubble ? 12 : 16, 
-                color: AppTheme.primary.withOpacity(0.5)
-              ),
+              Icon(Icons.terminal_rounded,
+                  size: isBubble ? 12 : 14,
+                  color: AppTheme.primary.withOpacity(0.3)),
               const SizedBox(width: 8),
               RichText(
                 text: TextSpan(
                   style: GoogleFonts.rajdhani(
-                    fontSize: AppResponsive.fontSize(context, 13),
-                    color: AppTheme.textSecondary,
+                    fontSize: AppResponsive.fontSize(context, 12),
+                    color: AppTheme.textSecondary.withOpacity(0.5),
                     letterSpacing: 2,
                   ),
                   children: [
@@ -165,11 +164,8 @@ class HomeScreen extends StatelessWidget {
                     TextSpan(
                       text: 'NIMAKHARRAJI',
                       style: TextStyle(
-                        color: AppTheme.primary,
+                        color: AppTheme.primary.withOpacity(0.8),
                         fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(color: AppTheme.primary.withOpacity(0.5), blurRadius: 8)
-                        ],
                       ),
                     ),
                   ],
@@ -177,13 +173,6 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          if (!isBubble) ...[
-            const SizedBox(height: 4),
-            const Text(
-              "STRATEGIC ANALYSIS v1.0.2",
-              style: TextStyle(color: Colors.white10, fontSize: 9, letterSpacing: 1),
-            ),
-          ]
         ],
       ),
     );

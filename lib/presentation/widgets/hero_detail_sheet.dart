@@ -1,5 +1,6 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import '../../data/models/hero_model.dart';
 import '../../data/repositories/hero_repository.dart';
 import '../../core/constants/enums.dart';
 import '../../core/utils/responsive.dart';

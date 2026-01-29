@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/constants/enums.dart';
@@ -329,10 +331,10 @@ class CounterPickerView extends StatelessWidget {
             border: Border.all(color: const Color(0xFF00D2FF))),
         child: Column(children: [
           Text("$total",
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w900,
-                  color: const Color(0xFF00D2FF))),
+                  color: Color(0xFF00D2FF))),
           const Text("SCORE",
               style: TextStyle(fontSize: 8, color: Colors.white38)),
         ]),

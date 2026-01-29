@@ -14,6 +14,7 @@ class HeroStatsChart extends StatelessWidget {
         RadarChartData(
           dataSets: [
             RadarDataSet(
+              // ignore: deprecated_member_use
               fillColor: Colors.purple.withOpacity(0.4),
               borderColor: Colors.purple,
               entryRadius: 3,
