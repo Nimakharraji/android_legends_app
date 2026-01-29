@@ -1,0 +1,32 @@
+name: android_legends_application
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_bloc: ^8.1.3
+  equatable: ^2.0.5
+  google_fonts: ^6.1.0
+  flutter_svg: ^2.0.9
+  flutter_staggered_grid_view: ^0.7.0
+  fl_chart: ^0.70.0
+  hydrated_bloc: ^9.1.5
+  path_provider: ^2.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  
+  # بخش مهم: تعریف دقیق مسیر عکس‌ها
+  assets:
+    - assets/images/heroes/
