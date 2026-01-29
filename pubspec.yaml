@@ -1,5 +1,5 @@
-name: android_legends_application
-description: "A new Flutter project."
+name: ml_drafter
+description: "MLBB Strategic Drafting Tool"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -18,6 +18,7 @@ dependencies:
   fl_chart: ^0.70.0
   hydrated_bloc: ^9.1.5
   path_provider: ^2.1.2
+  flutter_launcher_icons: "^0.13.1"
 
 dev_dependencies:
   flutter_test:
@@ -26,6 +27,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/icon.png"
+  adaptive_icon_background: "#1A1A2E" # رنگ پس‌زمینه آیکون برای اندروید ۱۰ به بالا
+  adaptive_icon_foreground: "assets/images/icon.png"
   
   # بخش مهم: تعریف دقیق مسیر عکس‌ها
   assets:
