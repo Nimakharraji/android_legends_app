@@ -1,12 +1,21 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// ۱. لود کردن مشخصات کلید امضا از فایل key.properties
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
 android {
-    // ۱. شناسه‌ی اپلیکیشن را منحصر‌به‌فرد کن (مثلاً com.freeiran.mlbbdrafter)
-    namespace = "com.freeiran.ml_drafter" 
+    namespace = "com.freeiran.ml_drafter"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -20,35 +29,38 @@ android {
     }
 
     defaultConfig {
-        // ۲. این آیدی باید در کل پلی‌استور تک باشد
-        applicationId = "com.freeiran.ml_drafter" 
-        
+        applicationId = "com.freeiran.ml_drafter"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    // ۲. تعریف کانفیگ امضای نسخه نهایی
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String?
+        }
+    }
+
     buildTypes {
         release {
-            // ۳. فعال‌سازی R8 برای حذف کدهای اضافه و کاهش چشمگیر حجم اپلیکیشن
-            isMinifyEnabled = true
+            // ۳. اعمال کلید امضای واقعی به جای debug
+            signingConfig = signingConfigs.getByName("release")
             
-            // ۴. حذف منابع (تصاویر و فایل‌های) استفاده نشده در پروژه
+            isMinifyEnabled = true
             isShrinkResources = true
             
-            // تنظیمات استاندارد پروگارد
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-
-            // ۵. برای انتشار نهایی باید کلید امضا (Keystore) بسازی و اینجا ست کنی
-            signingConfig = signingConfigs.getByName("debug") 
         }
     }
 
-    // برای پلی‌استور نیازی به useLegacyPackaging نیست چون App Bundle خودش بهینه است
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
