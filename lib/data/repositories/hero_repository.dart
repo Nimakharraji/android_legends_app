@@ -1009,6 +1009,406 @@ class HeroRepository {
         51,
         c: ['ling', 'fanny', 'helcurt', 'saber', 'lancelot'],
         s: ['estes', 'tigreal', 'layla', 'miya', 'nana']),
+
+    // 51. Ixia
+    _h(
+        'ixia',
+        51,
+        'Ixia',
+        HeroRole.marksman,
+        [HeroLane.gold],
+        'Reap/Damage',
+        'High-ground marksman with a massive fan-shaped Ultimate.',
+        'Position yourself safely before using Ultimate to dominate teamfights.',
+        const HeroStats(
+            damage: 10,
+            durability: 3,
+            crowdControl: 5.5,
+            mobility: 4.5,
+            difficulty: 6),
+        51,
+        c: ['saber', 'ling', 'fanny', 'eudora', 'chou', 'gusion'],
+        s: ['tigreal', 'estes', 'balmond', 'miya', 'layla']),
+
+    // 52. Nolan
+    _h(
+        'nolan',
+        52,
+        'Nolan',
+        HeroRole.assassin,
+        [HeroLane.jungle],
+        'Chase/Burst',
+        'Rift-cutting assassin with ultra-fast skill rotations.',
+        'Create rift intersections for explosions. Use Ult to cleanse CC and escape.',
+        const HeroStats(
+            damage: 10,
+            durability: 4,
+            crowdControl: 3,
+            mobility: 10,
+            difficulty: 8.5),
+        54,
+        c: ['khufra', 'franco', 'kaja', 'saber', 'eudora'],
+        s: ['layla', 'miya', 'lesley', 'hanabi', 'gord']),
+
+    // 53. Cici
+    _h(
+        'cici',
+        53,
+        'Cici',
+        HeroRole.fighter,
+        [HeroLane.exp],
+        'Damage/Regen',
+        'Yo-yo wielding fighter who kites enemies with high speed.',
+        'Maintain distance while Skill 1 is active to melt enemy HP while moving.',
+        const HeroStats(
+            damage: 8,
+            durability: 8,
+            crowdControl: 4,
+            mobility: 9,
+            difficulty: 5),
+        52,
+        c: ['saber', 'eudora', 'chou', 'franco', 'khufra'],
+        s: ['balmond', 'tigreal', 'hylos', 'layla', 'miya']),
+
+    // 54. Terizla
+    _h(
+        'terizla',
+        54,
+        'Terizla',
+        HeroRole.fighter,
+        [HeroLane.exp],
+        'Burst/Control',
+        'Slow but heavy hitter with extreme damage reduction.',
+        'Use Ultimate to pull enemies together, then follow with heavy Skill 2 hits.',
+        const HeroStats(
+            damage: 9.5,
+            durability: 9.5,
+            crowdControl: 8,
+            mobility: 3,
+            difficulty: 4.5),
+        53,
+        c: ['valir', 'lunox', 'karrie', 'baxia', 'wanwan'],
+        s: ['chou', 'badang', 'alucard', 'paquito', 'yin']),
+
+    // 55. Esmeralda
+    _h(
+        'esmeralda',
+        55,
+        'Esmeralda',
+        HeroRole.mage,
+        [HeroLane.exp, HeroLane.mid],
+        'Regen/Mixed Damage',
+        'Shield-absorbing battle mage who thrives in prolonged fights.',
+        'Spam Skill 1 and 2 to constantly steal enemy shields and boost speed.',
+        const HeroStats(
+            damage: 7.5,
+            durability: 9,
+            crowdControl: 4,
+            mobility: 8,
+            difficulty: 6.5),
+        52,
+        c: ['baxia', 'karrie', 'dyrroth', 'lunox', 'franco'],
+        s: ['pharsa', 'odette', 'estes', 'angela', 'lolita']),
+
+    // 56. Martis
+    _h(
+        'martis',
+        56,
+        'Martis',
+        HeroRole.fighter,
+        [HeroLane.jungle, HeroLane.exp],
+        'Burst/Control',
+        'Unstoppable fighter with CC immunity during Skill 2.',
+        'Use Skill 2 to block CC. Use Ultimate to execute and reset CD for a savage.',
+        const HeroStats(
+            damage: 9,
+            durability: 7.5,
+            crowdControl: 8,
+            mobility: 7,
+            difficulty: 5.5),
+        54,
+        c: ['franco', 'kaja', 'khufra', 'valir', 'baxia'],
+        s: ['nana', 'layla', 'miya', 'estes', 'rafaela']),
+
+    // 57. Lapu-Lapu
+    _h(
+        'lapulapu',
+        57,
+        'Lapu-Lapu',
+        HeroRole.fighter,
+        [HeroLane.exp],
+        'Burst/Guard',
+        'Heavy fighter with massive damage reduction in Twin Blade form.',
+        'Engage with Ultimate to gain defense and massive AOE burst damage.',
+        const HeroStats(
+            damage: 8.5,
+            durability: 9,
+            crowdControl: 7,
+            mobility: 7.5,
+            difficulty: 6),
+        52,
+        c: ['esmeralda', 'karrie', 'valir', 'baxia', 'wanwan'],
+        s: ['pharsa', 'layla', 'miya', 'lesley', 'hanabi']),
+
+    // 58. Thamuz
+    _h(
+        'thamuz',
+        58,
+        'Thamuz',
+        HeroRole.fighter,
+        [HeroLane.exp, HeroLane.jungle],
+        'Regen/True Damage',
+        'Early-game lane bully with insane health regeneration.',
+        'Spam scythes to slow enemies. Activate Ult for massive sustain in teamfights.',
+        const HeroStats(
+            damage: 8,
+            durability: 9.5,
+            crowdControl: 3,
+            mobility: 6,
+            difficulty: 4.5),
+        51,
+        c: ['baxia', 'valir', 'karrie', 'lunox', 'dyrroth'],
+        s: ['balmond', 'sun', 'alucard', 'zilong', 'layla']),
+
+    // 59. Lunox
+    _h(
+        'lunox',
+        59,
+        'Lunox',
+        HeroRole.mage,
+        [HeroLane.mid, HeroLane.gold],
+        'Burst/Poke',
+        'Versatile mage who toggles between healing and heavy magic penetration.',
+        'Use Brilliant version to escape or stay safe. Use Darkening to burst tanks.',
+        const HeroStats(
+            damage: 10,
+            durability: 5,
+            crowdControl: 4,
+            mobility: 7,
+            difficulty: 8.5),
+        53,
+        c: ['saber', 'ling', 'lancelot', 'helcurt', 'natalia'],
+        s: ['hylos', 'tigreal', 'balmond', 'terizla', 'fredrinn']),
+
+    // 60. Claude
+    _h(
+        'claude',
+        60,
+        'Claude',
+        HeroRole.marksman,
+        [HeroLane.gold, HeroLane.jungle],
+        'Burst/Chase',
+        'High mobility marksman who excels at diving teamfights.',
+        'Keep stacks full with S1. Use S2 to dive with Ultimate and blink back safely.',
+        const HeroStats(
+            damage: 9,
+            durability: 4,
+            crowdControl: 2,
+            mobility: 10,
+            difficulty: 8),
+        52,
+        c: ['saber', 'masha', 'franco', 'kaja', 'khufra', 'eudora'],
+        s: ['tigreal', 'estes', 'pharsa', 'layla', 'miya']),
+
+    // 61. Yu Zhong
+    _h(
+        'yuzhong',
+        61,
+        'Yu Zhong',
+        HeroRole.fighter,
+        [HeroLane.exp],
+        'Regen/Burst',
+        'Black Dragon who dominates lane with life drain.',
+        'Apply Sha Residue to 5 stacks to heal. Use Dragon form to dive the backline.',
+        const HeroStats(
+            damage: 8.5,
+            durability: 9,
+            crowdControl: 7.5,
+            mobility: 7,
+            difficulty: 7),
+        53,
+        c: ['baxia', 'karrie', 'lunox', 'dyrroth', 'valir'],
+        s: ['terizla', 'lapulapu', 'balmond', 'layla', 'miya']),
+
+    // 62. Phoveus
+    _h(
+        'phoveus',
+        62,
+        'Phoveus',
+        HeroRole.fighter,
+        [HeroLane.exp],
+        'Chase/Control',
+        'The ultimate counter to high-mobility dash heroes.',
+        'Wait for enemies to dash, then spam your Ultimate to teleport and smash them.',
+        const HeroStats(
+            damage: 8,
+            durability: 8.5,
+            crowdControl: 7,
+            mobility: 8,
+            difficulty: 6),
+        52,
+        c: ['franco', 'kaja', 'esmeralda', 'lunox', 'karrie'],
+        s: ['wanwan', 'benedetta', 'lancelot', 'fanny', 'joy', 'arlott']),
+
+    // 63. Baxia
+    _h(
+        'baxia',
+        63,
+        'Baxia',
+        HeroRole.tank,
+        [HeroLane.roam, HeroLane.jungle],
+        'Guard/Initiator',
+        'The living anti-heal machine with high mobility.',
+        'Roll into enemies to initiate. Spam Skill 2 on high-regen targets to reduce their healing.',
+        const HeroStats(
+            damage: 5,
+            durability: 9.5,
+            crowdControl: 6,
+            mobility: 9,
+            difficulty: 4.5),
+        54,
+        c: ['karrie', 'lunox', 'valir', 'x.borg', 'dyrroth'],
+        s: ['estes', 'esmeralda', 'alucard', 'thamuz', 'yuzhong', 'uranus']),
+
+    // 64. Minsitthar
+    _h(
+        'minsitthar',
+        64,
+        'Minsitthar',
+        HeroRole.fighter,
+        [HeroLane.exp, HeroLane.roam],
+        'Control/Guard',
+        'King of the battlefield who forbids enemy dashing.',
+        'Hook enemies into your Ultimate. Enemies inside cannot use any blink or dash skills.',
+        const HeroStats(
+            damage: 7,
+            durability: 8.5,
+            crowdControl: 10,
+            mobility: 4.5,
+            difficulty: 6.5),
+        53,
+        c: ['helcurt', 'nana', 'diggie', 'valir', 'kadita'],
+        s: ['fanny', 'ling', 'lancelot', 'gusion', 'wanwan', 'joy']),
+
+    // 65. Kadita
+    _h(
+        'kadita',
+        65,
+        'Kadita',
+        HeroRole.mage,
+        [HeroLane.mid, HeroLane.roam],
+        'Burst/Chase',
+        'Ocean goddess with high-burst magic and invincibility frames.',
+        'Use S1 to dive, S2 for knock-up, and Ult for massive AOE burst. Use S1 to escape CC.',
+        const HeroStats(
+            damage: 10,
+            durability: 4.5,
+            crowdControl: 7.5,
+            mobility: 8.5,
+            difficulty: 7.5),
+        54,
+        c: ['kaja', 'franco', 'saber', 'helcurt', 'nana'],
+        s: ['layla', 'miya', 'lesley', 'hanabi', 'pharsa', 'ixia']),
+
+    // 66. Harith
+    _h(
+        'harith',
+        66,
+        'Harith',
+        HeroRole.mage,
+        [HeroLane.gold, HeroLane.mid],
+        'Burst/Chase',
+        'Hyper-active mage who excels in continuous dashing and shielding.',
+        'Stay inside your Ultimate field to spam Skill 2 dashes and Skill 1 bursts.',
+        const HeroStats(
+            damage: 9,
+            durability: 6.5,
+            crowdControl: 4.5,
+            mobility: 10,
+            difficulty: 8.5),
+        52,
+        c: ['phoveus', 'minsitthar', 'khufra', 'saber', 'eudora'],
+        s: ['balmond', 'hylos', 'tigreal', 'alucard', 'dyrroth']),
+
+    // 67. Moskov
+    _h(
+        'moskov',
+        67,
+        'Moskov',
+        HeroRole.marksman,
+        [HeroLane.gold],
+        'Burst/Chase',
+        'High attack-speed marksman who pins enemies to walls.',
+        'Position yourself to pin enemies against walls for a long stun. Use passive to clear waves fast.',
+        const HeroStats(
+            damage: 10,
+            durability: 3,
+            crowdControl: 6,
+            mobility: 9.5,
+            difficulty: 8),
+        51,
+        c: ['saber', 'eudora', 'lesley', 'hayabusa', 'ling', 'fanny'],
+        s: ['tigreal', 'estes', 'balmond', 'layla', 'miya', 'hanabi']),
+
+    // 68. Hanabi
+    _h(
+        'hanabi',
+        68,
+        'Hanabi',
+        HeroRole.marksman,
+        [HeroLane.gold],
+        'Reap/Damage',
+        'Crowd-control immune marksman with bouncing blades.',
+        'Keep your shield active to remain immune to CC. Use Ultimate to link and root multiple enemies.',
+        const HeroStats(
+            damage: 8.5,
+            durability: 5,
+            crowdControl: 8,
+            mobility: 3,
+            difficulty: 3),
+        50,
+        c: ['fanny', 'ling', 'lancelot', 'gusion', 'saber', 'hayabusa'],
+        s: ['tigreal', 'atlas', 'estes', 'nana', 'minotaur']),
+
+    // 69. Zhask
+    _h(
+        'zhask',
+        69,
+        'Zhask',
+        HeroRole.mage,
+        [HeroLane.mid],
+        'Burst/Poke',
+        'Summoner from the swarm who fights through a giant turret.',
+        'Summon Nightmaric Spawn. Use Ultimate to fuse with it for massive damage and defense.',
+        const HeroStats(
+            damage: 10,
+            durability: 6,
+            crowdControl: 7.5,
+            mobility: 4,
+            difficulty: 6),
+        52,
+        c: ['helcurt', 'natalia', 'ling', 'fanny', 'lancelot', 'hanzo'],
+        s: ['layla', 'miya', 'estes', 'tigreal', 'balmond']),
+
+    // 70. Argus
+    _h(
+        'argus',
+        70,
+        'Argus',
+        HeroRole.fighter,
+        [HeroLane.exp],
+        'Burst/Regen',
+        'Fallen angel who cannot be killed during his Ultimate.',
+        'Activate Ultimate when low on HP. You are invincible and heal from the damage you deal.',
+        const HeroStats(
+            damage: 9.5,
+            durability: 10, // During Ult
+            crowdControl: 4,
+            mobility: 7,
+            difficulty: 5),
+        49,
+        c: ['valir', 'akai', 'nana', 'diggie', 'chou', 'jawhead'],
+        s: ['layla', 'miya', 'hanabi', 'sun', 'gord', 'zilong']),
   ];
 
   static List<HeroModel> getAllHeroes() => allHeroes;
