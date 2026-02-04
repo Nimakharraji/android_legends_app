@@ -51,6 +51,7 @@ android {
             // ۳. اعمال کلید امضای واقعی به جای debug
             signingConfig = signingConfigs.getByName("release")
             
+            // فعال‌سازی فشرده‌سازی کدها و حذف منابع اضافه
             isMinifyEnabled = true
             isShrinkResources = true
             
@@ -61,9 +62,14 @@ android {
         }
     }
 
+    // ۴. تنظیمات پکیجینگ برای فشرده‌سازی کتابخانه‌های Native و کاهش حجم
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+        jniLibs {
+            // این خط جادویی که حجم فایل رو کم می‌کنه (روش قدیمی فشرده‌سازی)
+            useLegacyPackaging = true
         }
     }
 }
