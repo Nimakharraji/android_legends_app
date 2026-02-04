@@ -19,21 +19,24 @@ dependencies:
   hydrated_bloc: ^9.1.5
   path_provider: ^2.1.2
   flutter_launcher_icons: "^0.13.1"
+  bloc: ^8.1.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
 
-flutter:
-  uses-material-design: true
-
+  
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/icon.png"
   adaptive_icon_background: "#1A1A2E" # رنگ پس‌زمینه آیکون برای اندروید ۱۰ به بالا
   adaptive_icon_foreground: "assets/images/icon.png"
+
+flutter:
+  uses-material-design: true
+
   
   # بخش مهم: تعریف دقیق مسیر عکس‌ها
   assets:

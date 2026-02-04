@@ -1,21 +1,23 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/hero_repository.dart';
 import '../../core/constants/enums.dart';
 import '../../core/utils/responsive.dart';
 
 class HeroDetailSheet extends StatelessWidget {
-  // تغییر اساسی: دریافت ID به جای مدل کامل برای حل ارور تصویر image_269c35.png
   final String heroId; 
   const HeroDetailSheet({super.key, required this.heroId});
 
   @override
   Widget build(BuildContext context) {
-    // استخراج هیرو از ریپازیتوری بر اساس ID ارسالی
-    final hero = HeroRepository.getHeroById(heroId);
+    // ۱. دریافت نمونه ریپازیتوری از context
+    final heroRepo = context.read<HeroRepository>();
     
-    // مدیریت حالت خطا (اگر هیرو پیدا نشد)
+    // ۲. استخراج هیرو با استفاده از نمونه (Instance) ریپازیتوری
+    final hero = heroRepo.getHeroById(heroId);
+    
     if (hero == null) {
       return const Center(child: Text("Hero Not Found", style: TextStyle(color: Colors.white)));
     }
@@ -38,7 +40,6 @@ class HeroDetailSheet extends StatelessWidget {
             controller: controller,
             padding: EdgeInsets.all(isBubble ? 16 : 24),
             children: [
-              // نوار کشویی بالا
               Center(
                 child: Container(
                   width: 40, 
@@ -48,7 +49,6 @@ class HeroDetailSheet extends StatelessWidget {
                 ),
               ),
 
-              // بخش هدر: تصویر و اطلاعات اصلی
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -108,18 +108,17 @@ class HeroDetailSheet extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              // بخش تحلیل هوش مصنوعی
               _buildSection("AI Analysis", hero.aiDescription, Icons.auto_awesome, theme),
               
               const SizedBox(height: 32),
 
-              // بخش روابط هیروها: کانترا و قوت‌ها
+              // ۳. پاس دادن heroRepo به متد کمکی برای لود کردن تصاویر کانترها
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(child: _buildRelationList("Weak Against", hero.counterHeroIds, Colors.redAccent)),
+                  Expanded(child: _buildRelationList("Weak Against", hero.counterHeroIds, Colors.redAccent, heroRepo)),
                   const SizedBox(width: 16),
-                  Expanded(child: _buildRelationList("Strong Against", hero.strongAgainstHeroIds, Colors.greenAccent)),
+                  Expanded(child: _buildRelationList("Strong Against", hero.strongAgainstHeroIds, Colors.greenAccent, heroRepo)),
                 ],
               ),
               
@@ -148,7 +147,7 @@ class HeroDetailSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildRelationList(String title, List<String> ids, Color color) {
+  Widget _buildRelationList(String title, List<String> ids, Color color, HeroRepository repo) {
     const double standardPortraitRatio = 0.7;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,12 +155,13 @@ class HeroDetailSheet extends StatelessWidget {
         Text(title, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 13)),
         const SizedBox(height: 12),
         ids.isEmpty 
-          ? const Text("No specific data", style: TextStyle(color: Colors.white12, fontSize: 10))
+          ? const Text("No data", style: TextStyle(color: Colors.white12, fontSize: 10))
           : Wrap(
               spacing: 8, 
               runSpacing: 8,
               children: ids.map((id) {
-                final target = HeroRepository.getHeroById(id);
+                // استفاده از نمونه ریپازیتوری پاس داده شده
+                final target = repo.getHeroById(id);
                 if (target == null) return const SizedBox();
                 return SizedBox(
                   width: 45,

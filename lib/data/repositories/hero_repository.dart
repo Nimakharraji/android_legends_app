@@ -2,7 +2,7 @@ import '../models/hero_model.dart';
 import '../../core/constants/enums.dart';
 
 class HeroRepository {
-  static final List<HeroModel> allHeroes = [
+  final List<HeroModel> allHeroes = [
     // 1. Fanny
     _h(
         'fanny',
@@ -2631,9 +2631,9 @@ class HeroRepository {
         s: ['layla', 'miya', 'lesley', 'hanabi', 'pharsa', 'ixia']),
   ];
 
-  static List<HeroModel> getAllHeroes() => allHeroes;
+  List<HeroModel> getAllHeroes() => allHeroes;
 
-  static HeroModel? getHeroById(String id) {
+   HeroModel? getHeroById(String id) {
     try {
       return allHeroes.firstWhere((hero) => hero.id == id);
     } catch (e) {

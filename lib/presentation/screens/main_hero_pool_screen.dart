@@ -11,11 +11,13 @@ class MainHeroPoolScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // دسترسی به نمونه ریپازیتوری از طریق Provider
+    final heroRepo = context.read<HeroRepository>();
+
     return Scaffold(
       backgroundColor: const Color(0xFF0F0F1E),
       appBar: AppBar(
-        title:
-            const Text("BUILD YOUR POOL", style: TextStyle(letterSpacing: 2)),
+        title: const Text("BUILD YOUR POOL", style: TextStyle(letterSpacing: 2)),
         backgroundColor: Colors.transparent,
         actions: [
           IconButton(
@@ -28,9 +30,8 @@ class MainHeroPoolScreen extends StatelessWidget {
         builder: (context, poolState) {
           return BlocBuilder<PinnedHeroesCubit, PinnedHeroesState>(
             builder: (context, pinState) {
-              // ۱. فیلتر کردن هیروها بر اساس انتخاب کاربر
-              final filteredHeroes =
-                  HeroRepository.getAllHeroes().where((hero) {
+              // ۱. حل ارور استاتیک: استفاده از نمونه repo به جای نام کلاس
+              final filteredHeroes = heroRepo.getAllHeroes().where((hero) {
                 final roleMatch = poolState.selectedRole == null ||
                     hero.role == poolState.selectedRole;
                 final laneMatch = poolState.selectedLane == null ||
@@ -54,7 +55,7 @@ class MainHeroPoolScreen extends StatelessWidget {
 
                   const Divider(color: Colors.white10, height: 1),
 
-                  // ۴. نمایش تعداد نتایج و هیروهای انتخاب شده
+                  // ۴. نمایش وضعیت
                   _buildStatusHeader(poolState),
 
                   Expanded(
@@ -84,10 +85,10 @@ class MainHeroPoolScreen extends StatelessWidget {
                                   opacity: isMain ? 1.0 : 0.4,
                                   child: HeroAvatarItem(
                                       hero: hero,
+                                      // حل ارور onTap با پاس دادن فانکشن صحیح
                                       onTap: () => context
                                           .read<MainHeroPoolCubit>()
-                                          .toggleHero(hero.id) // حل ارور onTap
-                                      ),
+                                          .toggleHero(hero.id)),
                                 ),
                               );
                             },
@@ -102,12 +103,13 @@ class MainHeroPoolScreen extends StatelessWidget {
     );
   }
 
+  // --- متدهای کمکی ویجت‌ها (بدون تغییر در ساختار UI) ---
+
   Widget _buildFilterSection(BuildContext context, MainHeroPoolState state) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         children: [
-          // فیلتر رول‌ها
           SizedBox(
             height: 40,
             child: ListView(
@@ -129,7 +131,6 @@ class MainHeroPoolScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          // فیلتر لاین‌ها
           SizedBox(
             height: 40,
             child: ListView(

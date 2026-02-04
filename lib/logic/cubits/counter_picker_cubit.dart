@@ -1,133 +1,97 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:bloc/bloc.dart';
 import '../../data/models/hero_model.dart';
 import '../../data/repositories/hero_repository.dart';
+import '../services/start_matchup_services.dart';
+import 'counter_picker_state.dart';
 import '../../core/constants/enums.dart';
-import 'main_hero_pool_cubit.dart';
-
-class ScoreBreakdown {
-  final int laneScore, mainScore, counterScore, total;
-  final List<String> counteredEnemies;
-  final List<Map<String, dynamic>> threats;
-
-  ScoreBreakdown({
-    required this.laneScore,
-    required this.mainScore,
-    required this.counterScore,
-    required this.total,
-    required this.counteredEnemies,
-    required this.threats,
-  });
-}
-
-class CounterPickerState extends Equatable {
-  final List<HeroModel> enemyTeam, recommendations;
-  final HeroLane selectedLane;
-  final Map<String, ScoreBreakdown> scores;
-
-  const CounterPickerState({
-    this.enemyTeam = const [],
-    this.recommendations = const [],
-    this.selectedLane = HeroLane.fill,
-    this.scores = const {},
-  });
-
-  @override
-  List<Object> get props => [enemyTeam, recommendations, selectedLane, scores];
-
-  CounterPickerState copyWith({
-    List<HeroModel>? enemyTeam,
-    List<HeroModel>? recommendations,
-    HeroLane? selectedLane,
-    Map<String, ScoreBreakdown>? scores,
-  }) {
-    return CounterPickerState(
-      enemyTeam: enemyTeam ?? this.enemyTeam,
-      recommendations: recommendations ?? this.recommendations,
-      selectedLane: selectedLane ?? this.selectedLane,
-      scores: scores ?? this.scores,
-    );
-  }
-}
 
 class CounterPickerCubit extends Cubit<CounterPickerState> {
-  CounterPickerCubit() : super(const CounterPickerState());
+  final HeroRepository _repository;
+  final StatMatchupService _statService = StatMatchupService(); // سرویس جدید
+  late final List<HeroModel> _allHeroes;
 
-  void setLane(HeroLane lane, MainHeroPoolState pool) {
-    emit(state.copyWith(selectedLane: lane));
-    _calculate(state.enemyTeam, pool, lane);
+  CounterPickerCubit(this._repository) : super(const CounterPickerState()) {
+    _allHeroes = _repository.getAllHeroes(); // بارگذاری ۱۳۱ هیرو
   }
 
-  void addEnemy(HeroModel hero, MainHeroPoolState pool) {
-    if (state.enemyTeam.length >= 5 || state.enemyTeam.contains(hero)) return;
-    final updated = List<HeroModel>.from(state.enemyTeam)..add(hero);
-    _calculate(updated, pool, state.selectedLane);
-  }
+  void analyzeDraft({
+    required List<HeroModel> enemyTeam,
+    required HeroLane selectedLane,
+    required List<String> userMainHeroIds, // لیست هیروهای مِین کاربر
+  }) {
+    emit(state.copyWith(
+      status: CounterPickerStatus.loading,
+      enemyTeam: enemyTeam,
+      selectedLane: selectedLane,
+    ));
 
-  void removeEnemy(HeroModel hero, MainHeroPoolState pool) {
-    final updated = List<HeroModel>.from(state.enemyTeam)..remove(hero);
-    _calculate(updated, pool, state.selectedLane);
-  }
+    try {
+      final Map<String, ScoreBreakdown> heroScores = {};
+      final List<HeroModel> laneCandidates = _allHeroes
+          .where((h) =>
+              h.preferredLanes.contains(selectedLane) ||
+              selectedLane == HeroLane.fill)
+          .toList();
 
-  void _calculate(
-      List<HeroModel> enemies, MainHeroPoolState pool, HeroLane lane) {
-    if (enemies.isEmpty) {
-      emit(state.copyWith(enemyTeam: enemies, recommendations: [], scores: {}));
-      return;
-    }
+      for (var candidate in laneCandidates) {
+        if (enemyTeam.any((e) => e.id == candidate.id)) continue;
 
-    final all = HeroRepository.getAllHeroes();
-    final Map<HeroModel, ScoreBreakdown> heroBreakdowns = {};
+        // ۱. تحلیل چارت‌های آماری (Meta Power تخصصی)
+        double metaPower =
+            _statService.getDynamicMetaPower(candidate, enemyTeam);
 
-    for (var h in all) {
-      if (enemies.contains(h)) continue;
+        // ۲. امتیاز تعلق (Main Bonus)
+        double mainBonus = userMainHeroIds.contains(candidate.id) ? 12.0 : 0.0;
 
-      // ۱. اصلاح امتیاز لاین: ۲۵+ برای لاین درست و ۵۰- برای تداخل لاین [اصلاح درخواستی]
-      int lS = (lane != HeroLane.fill)
-          ? (h.preferredLanes.contains(lane) ? 25 : -50)
-          : 0;
+        // ۳. امتیاز کانتر (منطق دوطرفه و Case-Insensitive)
+        double counterScore = 0.0;
+        List<String> counteredEnemies = [];
+        for (var enemy in enemyTeam) {
+          String cId = candidate.id.toLowerCase();
+          String eId = enemy.id.toLowerCase();
 
-      // ۲. امتیاز هیرو Main: ۳۵+
-      int mS = pool.mainHeroIds.contains(h.id) ? 35 : 0;
+          // اگر ما آن‌ها را کانتر کنیم یا آن‌ها در برابر ما ضعیف باشند
+          if (candidate.strongAgainstHeroIds.contains(eId) ||
+              enemy.counterHeroIds.contains(cId)) {
+            counterScore += 25.0;
+            counteredEnemies.add(enemy.name);
+          }
 
-      int cS = 0;
-      List<String> countered = [];
-      List<Map<String, dynamic>> threats = [];
-
-      for (var e in enemies) {
-        if (h.strongAgainstHeroIds.contains(e.id)) {
-          cS += 35;
-          countered.add(e.name);
+          // اگر آن‌ها ما را کانتر کنند (جریمه سنگین)
+          if (candidate.counterHeroIds.contains(eId)) {
+            counterScore -= 20.0;
+          }
         }
-        if (h.counterHeroIds.contains(e.id)) {
-          cS -= 35;
-          threats.add({'name': e.name, 'penalty': -35});
-        }
-      }
 
-      int total = lS + mS + cS;
+        // ۴. امتیاز لاین تخصصی
+        double laneScore =
+            candidate.preferredLanes.contains(selectedLane) ? 20.0 : -15.0;
 
-      // فیلتر هیروهایی که ارزش تاکتیکی ندارند (Main نیستند و کسی را کانتر نمی‌کنند)
-      if ((mS > 0 || cS > 0) && total > -80) {
-        heroBreakdowns[h] = ScoreBreakdown(
-          laneScore: lS,
-          mainScore: mS,
-          counterScore: cS,
+        // مجموع نهایی
+        double total = laneScore + metaPower + counterScore + mainBonus;
+
+        heroScores[candidate.id] = ScoreBreakdown(
+          laneScore: laneScore,
+          mainScore: metaPower,
+          counterScore: counterScore,
+          mainBonus: mainBonus,
           total: total,
-          counteredEnemies: countered,
-          threats: threats,
+          counteredEnemies: counteredEnemies,
         );
       }
+
+      // ۵. مرتب‌سازی هوشمند (نزولی)
+      laneCandidates.sort((a, b) => (heroScores[b.id]?.total ?? 0)
+          .compareTo(heroScores[a.id]?.total ?? 0));
+
+      emit(state.copyWith(
+        status: CounterPickerStatus.loaded,
+        recommendations: laneCandidates.take(15).toList(),
+        scores: heroScores,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+          status: CounterPickerStatus.error, errorMessage: e.toString()));
     }
-
-    final sorted = heroBreakdowns.keys.toList()
-      ..sort((a, b) =>
-          heroBreakdowns[b]!.total.compareTo(heroBreakdowns[a]!.total));
-
-    emit(state.copyWith(
-      enemyTeam: enemies,
-      recommendations: sorted,
-      scores: heroBreakdowns.map((k, v) => MapEntry(k.id, v)),
-    ));
   }
 }
