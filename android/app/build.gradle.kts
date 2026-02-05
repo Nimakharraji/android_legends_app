@@ -7,7 +7,6 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// ۱. لود کردن مشخصات کلید امضا از فایل key.properties
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
@@ -36,24 +35,29 @@ android {
         versionName = flutter.versionName
     }
 
-    // ۲. تعریف کانفیگ امضای نسخه نهایی
     signingConfigs {
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String?
             keyPassword = keystoreProperties["keyPassword"] as String?
             storeFile = keystoreProperties["storeFile"]?.let { file(it) }
             storePassword = keystoreProperties["storePassword"] as String?
+            
+            // *** تغییر مهم برای مایکت و بازار ***
+            // این دو خط باعث می‌شود فایل روی همه دستگاه‌ها و پنل‌های ایرانی خوانده شود
+            enableV1Signing = true
+            enableV2Signing = true
         }
     }
 
     buildTypes {
         release {
-            // ۳. اعمال کلید امضای واقعی به جای debug
             signingConfig = signingConfigs.getByName("release")
             
-            // فعال‌سازی فشرده‌سازی کدها و حذف منابع اضافه
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // *** تغییر موقت ***
+            // فعلاً این دو تا را false بگذارید تا مطمئن شویم فایل سالم آپلود می‌شود
+            // اگر آپلود موفق بود، می‌توانید دوباره true کنید و تست کنید
+            isMinifyEnabled = false
+            isShrinkResources = false
             
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -62,13 +66,11 @@ android {
         }
     }
 
-    // ۴. تنظیمات پکیجینگ برای فشرده‌سازی کتابخانه‌های Native و کاهش حجم
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
         jniLibs {
-            // این خط جادویی که حجم فایل رو کم می‌کنه (روش قدیمی فشرده‌سازی)
             useLegacyPackaging = true
         }
     }
