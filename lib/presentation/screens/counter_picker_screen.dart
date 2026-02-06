@@ -59,6 +59,7 @@ class CounterPickerView extends StatelessWidget {
           return CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: _buildLaneSelector(context, state.selectedLane, pool.mainHeroIds)),
+              // بخش اسلات‌های حریف با قابلیت حذف بهبود یافته
               SliverToBoxAdapter(child: _buildEnemySlots(context, state.enemyTeam, pool.mainHeroIds)),
               
               if (state.status == CounterPickerStatus.loaded && state.recommendations.isNotEmpty) ...[
@@ -150,17 +151,41 @@ class CounterPickerView extends StatelessWidget {
           final h = i < enemies.length ? enemies[i] : null;
           return GestureDetector(
             onTap: () => _handleEnemyTap(context, h, enemies, mainIds),
-            child: Container(
-              width: 60, height: 80,
-              decoration: BoxDecoration(
-                color: Colors.black26,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: h != null ? Colors.red.withOpacity(0.5) : Colors.white10, width: 2),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(14),
-                child: h != null ? Image.asset(h.imagePath, fit: BoxFit.cover) : const Icon(Icons.add, color: Colors.white10),
-              ),
+            child: Stack(
+              clipBehavior: Clip.none, // برای اجازه دادن به نمایش دکمه حذف خارج از کادر
+              children: [
+                Container(
+                  width: 60, height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.black26,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: h != null ? Colors.red.withOpacity(0.5) : Colors.white10, 
+                      width: 2
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: h != null 
+                        ? Image.asset(h.imagePath, fit: BoxFit.cover) 
+                        : const Icon(Icons.add, color: Colors.white10),
+                  ),
+                ),
+                // بهبود UX: اضافه کردن دکمه حذف قرمز کوچک در صورتی که هیرو انتخاب شده باشد
+                if (h != null)
+                  Positioned(
+                    top: -5,
+                    right: -5,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.close, size: 12, color: Colors.white),
+                    ),
+                  ),
+              ],
             ),
           );
         }),
@@ -169,7 +194,14 @@ class CounterPickerView extends StatelessWidget {
   }
 
   void _handleEnemyTap(BuildContext context, HeroModel? h, List<HeroModel> enemies, List<String> mainIds) {
-    if (h == null) {
+    if (h != null) {
+      // بهبود UX: حذف هیرو در صورت کلیک روی اسلات پر شده
+      context.read<CounterPickerCubit>().analyzeDraft(
+        enemyTeam: List<HeroModel>.from(enemies)..removeWhere((hero) => hero.id == h.id),
+        selectedLane: context.read<CounterPickerCubit>().state.selectedLane,
+        userMainHeroIds: mainIds,
+      );
+    } else {
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -244,12 +276,9 @@ class CounterPickerView extends StatelessWidget {
         ),
         title: Text(hero.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         subtitle: Text("Strategic Score: $score", style: const TextStyle(color: Colors.white38, fontSize: 12)),
-        trailing: Container(
-          decoration: BoxDecoration(color: const Color(0xFF00D2FF).withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-          child: IconButton(
-            icon: const Icon(Icons.bar_chart_rounded, color: Color(0xFF00D2FF)), 
-            onPressed: () => _showAnalysis(context, hero, state),
-          ),
+        trailing: IconButton(
+          icon: const Icon(Icons.bar_chart_rounded, color: Color(0xFF00D2FF), size: 28), 
+          onPressed: () => _showAnalysis(context, hero, state),
         ),
       ),
     );
@@ -272,7 +301,6 @@ class CounterPickerView extends StatelessWidget {
             _scoreTile("Meta Power", sc?.mainScore.toInt() ?? 0, Icons.auto_awesome, Colors.amber),
             _scoreTile("Lane Efficiency", sc?.laneScore.toInt() ?? 0, Icons.explore, Colors.blue),
             _scoreTile("Counter Advantage", sc?.counterScore.toInt() ?? 0, Icons.security, Colors.green),
-            // اضافه شدن بخش امتیاز مِین
             _scoreTile("Main Affinity", sc?.mainBonus.toInt() ?? 0, Icons.favorite, Colors.pinkAccent),
             
             if (sc != null && sc.counteredEnemies.isNotEmpty) ...[
@@ -286,7 +314,6 @@ class CounterPickerView extends StatelessWidget {
               )).toList()),
             ],
             const Divider(color: Colors.white10, height: 60),
-            // نمودار راداری اصلاح شده
             HeroStatsChart(stats: hero.stats),
             const SizedBox(height: 20),
           ]),
