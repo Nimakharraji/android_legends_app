@@ -59,7 +59,8 @@ class CounterPickerView extends StatelessWidget {
           return CustomScrollView(
             slivers: [
               SliverToBoxAdapter(child: _buildLaneSelector(context, state.selectedLane, pool.mainHeroIds)),
-              // بخش اسلات‌های حریف با قابلیت حذف بهبود یافته
+              
+              // اسلات‌های حریف با معماری تعاملی و متریال دیزاین پیشرفته
               SliverToBoxAdapter(child: _buildEnemySlots(context, state.enemyTeam, pool.mainHeroIds)),
               
               if (state.status == CounterPickerStatus.loaded && state.recommendations.isNotEmpty) ...[
@@ -149,44 +150,61 @@ class CounterPickerView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(5, (i) {
           final h = i < enemies.length ? enemies[i] : null;
-          return GestureDetector(
-            onTap: () => _handleEnemyTap(context, h, enemies, mainIds),
-            child: Stack(
-              clipBehavior: Clip.none, // برای اجازه دادن به نمایش دکمه حذف خارج از کادر
-              children: [
-                Container(
-                  width: 60, height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: h != null ? Colors.red.withOpacity(0.5) : Colors.white10, 
-                      width: 2
+          final bool isFilled = h != null;
+
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => _handleEnemyTap(context, h, enemies, mainIds),
+                  borderRadius: BorderRadius.circular(16),
+                  splashColor: isFilled ? Colors.red.withOpacity(0.3) : const Color(0xFF00D2FF).withOpacity(0.3),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOut,
+                    width: 60, 
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: isFilled ? Colors.transparent : Colors.black26,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isFilled ? Colors.red.withOpacity(0.4) : Colors.white10, 
+                        width: isFilled ? 1.5 : 2.0
+                      ),
+                      boxShadow: isFilled ? [
+                        BoxShadow(color: Colors.red.withOpacity(0.1), blurRadius: 8, spreadRadius: 1)
+                      ] : [],
                     ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: h != null 
-                        ? Image.asset(h.imagePath, fit: BoxFit.cover) 
-                        : const Icon(Icons.add, color: Colors.white10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: isFilled 
+                          ? Image.asset(h.imagePath, fit: BoxFit.cover) 
+                          : const Icon(Icons.add, color: Colors.white24),
+                    ),
                   ),
                 ),
-                // بهبود UX: اضافه کردن دکمه حذف قرمز کوچک در صورتی که هیرو انتخاب شده باشد
-                if (h != null)
-                  Positioned(
-                    top: -5,
-                    right: -5,
+              ),
+              
+              // نشانگر بصری حذف برای راهنمایی کاربر
+              if (isFilled)
+                Positioned(
+                  top: -6,
+                  right: -6,
+                  child: IgnorePointer( // جلوگیری از تداخل تاچ با InkWell اصلی
                     child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
+                      padding: const EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF161626),
                         shape: BoxShape.circle,
+                        border: Border.all(color: Colors.red.withOpacity(0.8), width: 1.5),
                       ),
-                      child: const Icon(Icons.close, size: 12, color: Colors.white),
+                      child: const Icon(Icons.close_rounded, size: 10, color: Colors.red),
                     ),
                   ),
-              ],
-            ),
+                ),
+            ],
           );
         }),
       ),
@@ -194,13 +212,11 @@ class CounterPickerView extends StatelessWidget {
   }
 
   void _handleEnemyTap(BuildContext context, HeroModel? h, List<HeroModel> enemies, List<String> mainIds) {
+    final cubit = context.read<CounterPickerCubit>();
+    
     if (h != null) {
-      // بهبود UX: حذف هیرو در صورت کلیک روی اسلات پر شده
-      context.read<CounterPickerCubit>().analyzeDraft(
-        enemyTeam: List<HeroModel>.from(enemies)..removeWhere((hero) => hero.id == h.id),
-        selectedLane: context.read<CounterPickerCubit>().state.selectedLane,
-        userMainHeroIds: mainIds,
-      );
+      // استفاده از متد کپسوله شده در کیوبیت به جای دستکاری مستقیم لیست در UI
+      cubit.removeEnemy(h, mainIds);
     } else {
       showModalBottomSheet(
         context: context,
@@ -210,9 +226,9 @@ class CounterPickerView extends StatelessWidget {
           excludedHeroes: enemies,
           onHeroSelected: (newH) {
             final newList = List<HeroModel>.from(enemies)..add(newH);
-            context.read<CounterPickerCubit>().analyzeDraft(
+            cubit.analyzeDraft(
               enemyTeam: newList,
-              selectedLane: context.read<CounterPickerCubit>().state.selectedLane,
+              selectedLane: cubit.state.selectedLane,
               userMainHeroIds: mainIds,
             );
           },
